@@ -1,5 +1,5 @@
-import React, {useContext, useState} from 'react';
-import PropTypes from 'prop-types'
+import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const FeathersContext = React.createContext(null);
 
@@ -60,7 +60,7 @@ export const FeathersProvider = ({ children, client: feathersClient }) => {
       .service('users')
       .create({
         email,
-        password
+        password,
       })
   );
 

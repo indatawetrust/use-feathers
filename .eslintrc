@@ -4,5 +4,15 @@
   ],
   "env": {
     "jest": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/forbid-prop-types": [0],
+    "import/no-unresolved": [0]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
