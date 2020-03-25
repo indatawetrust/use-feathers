@@ -1,6 +1,6 @@
 {
   "name": "@cond/use-feathers",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React bindings for FeathersJS",
   "main": "build/index.cjs.js",
   "module": "build/index.esm.js",
