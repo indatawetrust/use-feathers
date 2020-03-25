@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jaebradley/example-rollup-react-component-npm-package.git"
+    "url": "https://github.com/indatawetrust/use-feathers.git"
   },
   "publishConfig": {
     "access": "public"
@@ -36,9 +36,9 @@
   "author": "iamaroott@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jaebradley/example-rollup-react-component-npm-package/issues"
+    "url": "https://github.com/indatawetrust/use-feathers/issues"
   },
-  "homepage": "https://github.com/jaebradley/example-rollup-react-component-npm-package#readme",
+  "homepage": "https://github.com/indatawetrust/use-feathers#readme",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.6",
