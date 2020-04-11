@@ -55,12 +55,13 @@ export const FeathersProvider = ({ children, client: feathersClient }) => {
    * @param registerInfo.password user password
    * @return {Promise}
    */
-  const register = ({ email = '', password = '' }) => (
+  const register = ({ email = '', password = '', ...otherFields }) => (
     feathersClient
       .service('users')
       .create({
         email,
         password,
+        ...otherFields,
       })
   );
 
