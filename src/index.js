@@ -1,13 +1,83 @@
-import React, { useContext, useState } from 'react';
+import React, {
+  useContext,
+  useState,
+  useReducer,
+  useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
+import reducer from './reducer';
+import { deepGet } from './utils';
+import { actionTypes, serviceMethods } from './constants';
 
 const FeathersContext = React.createContext(null);
 
 export const useFeathers = () => useContext(FeathersContext);
 
-export const FeathersProvider = ({ children, client: feathersClient }) => {
+const initialState = {};
+
+export const FeathersProvider = ({
+  children,
+  client: feathersClient,
+  initialServices = [],
+}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const initialServiceState = {};
+
+    const serviceState = {
+      [serviceMethods.FIND]: {
+        isPending: false,
+        isLoaded: false,
+        error: null,
+        data: {
+          total: 0,
+          limit: 10,
+          skip: 0,
+          data: [],
+        },
+      },
+      [serviceMethods.GET]: {
+        isPending: false,
+        isLoaded: false,
+        error: null,
+        data: null,
+      },
+      [serviceMethods.CREATE]: {
+        isPending: false,
+        isLoaded: false,
+        error: null,
+        data: null,
+      },
+      [serviceMethods.UPDATE]: {
+        isPending: false,
+        isLoaded: false,
+        error: null,
+        data: null,
+      },
+      [serviceMethods.PATCH]: {
+        isPending: false,
+        isLoaded: false,
+        error: null,
+        data: null,
+      },
+      [serviceMethods.REMOVE]: {
+        isPending: false,
+        isLoaded: false,
+        error: null,
+        data: null,
+      },
+    };
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const service of initialServices) {
+      initialServiceState[service] = serviceState;
+    }
+
+    dispatch({ type: actionTypes.INITIAL_SERVICES, initialServiceState });
+  }, []);
 
   /*
    * @param data
@@ -27,11 +97,8 @@ export const FeathersProvider = ({ children, client: feathersClient }) => {
   /*
    * @return {Promise}
    */
-  const checkAuth = () => (
-    feathersClient
-      .get('authentication')
-      .then(successfulLogin)
-  );
+  const checkAuth = () =>
+    feathersClient.get('authentication').then(successfulLogin);
 
   /*
    * @param loginInfo
@@ -56,32 +123,211 @@ export const FeathersProvider = ({ children, client: feathersClient }) => {
    * @return {Promise}
    */
   const register = ({ email = '', password = '', ...otherFields }) => (
-    feathersClient
-      .service('users')
-      .create({
-        email,
-        password,
-        ...otherFields,
-      })
+    feathersClient.service('users').create({
+      email,
+      password,
+      ...otherFields,
+    })
   );
 
   /*
    * @return {Promise}
    */
-  const reAuth = () => (
-    feathersClient
-      .reAuthenticate()
-      .then(() => checkAuth())
-  );
+  const reAuth = () => feathersClient.reAuthenticate().then(() => checkAuth());
 
   /*
    * @return {Promise}
    */
-  const logout = () => (
-    feathersClient
-      .logout()
-      .then(() => setIsLoggedIn(false))
-  );
+  const logout = () => feathersClient.logout().then(() => setIsLoggedIn(false));
+
+  const useFind = (service) => ({
+    // inject reducer state
+    state: deepGet(state, ['serviceState', service, serviceMethods.FIND]),
+    findAction: (query = {}) => {
+      dispatch({
+        type: actionTypes.PENDING,
+        method: serviceMethods.FIND,
+        service,
+      });
+
+      feathersClient
+        .service(service)
+        .find({
+          query,
+        })
+        .then((result) => {
+          dispatch({
+            type: actionTypes.FULFILLED,
+            method: serviceMethods.FIND,
+            service,
+            result,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: actionTypes.REJECTED,
+            method: serviceMethods.FIND,
+            service,
+            error,
+          });
+        });
+    },
+  });
+  const useGet = (service) => ({
+    // inject reducer state
+    state: deepGet(state, ['serviceState', service, serviceMethods.GET]),
+    getAction: (id) => {
+      dispatch({
+        type: actionTypes.PENDING,
+        method: serviceMethods.GET,
+        service,
+      });
+
+      feathersClient
+        .service(service)
+        .get(id)
+        .then((result) => {
+          dispatch({
+            type: actionTypes.FULFILLED,
+            method: serviceMethods.GET,
+            service,
+            result,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: actionTypes.REJECTED,
+            method: serviceMethods.GET,
+            service,
+            error,
+          });
+        });
+    },
+  });
+  const useCreate = (service) => ({
+    // inject reducer state
+    state: deepGet(state, ['serviceState', service, serviceMethods.CREATE]),
+    createAction: (data, params) => {
+      dispatch({
+        type: actionTypes.PENDING,
+        method: serviceMethods.CREATE,
+        service,
+      });
+
+      feathersClient
+        .service(service)
+        .create(data, params)
+        .then((result) => {
+          dispatch({
+            type: actionTypes.FULFILLED,
+            method: serviceMethods.CREATE,
+            service,
+            result,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: actionTypes.REJECTED,
+            method: serviceMethods.CREATE,
+            service,
+            error,
+          });
+        });
+    },
+  });
+  const useUpdate = (service) => ({
+    // inject reducer state
+    state: deepGet(state, ['serviceState', service, serviceMethods.UPDATE]),
+    updateAction: (id, params = {}, query = {}) => {
+      dispatch({
+        type: actionTypes.PENDING,
+        method: serviceMethods.UPDATE,
+        service,
+      });
+
+      feathersClient
+        .service(service)
+        .update(id, params, { query })
+        .then((result) => {
+          dispatch({
+            type: actionTypes.FULFILLED,
+            method: serviceMethods.UPDATE,
+            service,
+            result,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: actionTypes.REJECTED,
+            method: serviceMethods.UPDATE,
+            service,
+            error,
+          });
+        });
+    },
+  });
+  const usePatch = (service) => ({
+    // inject reducer state
+    state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
+    removeAction: (id, query = {}) => {
+      dispatch({
+        type: actionTypes.PENDING,
+        method: serviceMethods.REMOVE,
+        service,
+      });
+
+      feathersClient
+        .service(service)
+        .remove(id, { query })
+        .then((result) => {
+          dispatch({
+            type: actionTypes.FULFILLED,
+            method: serviceMethods.REMOVE,
+            service,
+            result,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: actionTypes.REJECTED,
+            method: serviceMethods.REMOVE,
+            service,
+            error,
+          });
+        });
+    },
+  });
+  const useRemove = (service) => ({
+    // inject reducer state
+    state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
+    removeAction: (id, query = {}) => {
+      dispatch({
+        type: actionTypes.PENDING,
+        method: serviceMethods.REMOVE,
+        service,
+      });
+
+      feathersClient
+        .service(service)
+        .remove(id, { query })
+        .then((result) => {
+          dispatch({
+            type: actionTypes.FULFILLED,
+            method: serviceMethods.REMOVE,
+            service,
+            result,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: actionTypes.REJECTED,
+            method: serviceMethods.REMOVE,
+            service,
+            error,
+          });
+        });
+    },
+  });
 
   return (
     <FeathersContext.Provider
@@ -93,6 +339,13 @@ export const FeathersProvider = ({ children, client: feathersClient }) => {
         logout,
         isLoggedIn,
         userInfo,
+        mainState: state,
+        useFind,
+        useGet,
+        useCreate,
+        useUpdate,
+        usePatch,
+        useRemove,
       }}
     >
       {children}
@@ -103,4 +356,9 @@ export const FeathersProvider = ({ children, client: feathersClient }) => {
 FeathersProvider.propTypes = {
   children: PropTypes.element.isRequired,
   client: PropTypes.object.isRequired,
+  initialServices: PropTypes.objectOf(PropTypes.string),
+};
+
+FeathersProvider.defaultProps = {
+  initialServices: [],
 };
