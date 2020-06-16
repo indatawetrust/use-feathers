@@ -269,7 +269,7 @@ export const FeathersProvider = ({
   const usePatch = (service) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
-    removeAction: (id, query = {}) => {
+    patchAction: (id, query = {}) => {
       dispatch({
         type: actionTypes.PENDING,
         method: serviceMethods.REMOVE,
@@ -356,7 +356,7 @@ export const FeathersProvider = ({
 FeathersProvider.propTypes = {
   children: PropTypes.element.isRequired,
   client: PropTypes.object.isRequired,
-  initialServices: PropTypes.objectOf(PropTypes.string),
+  initialServices: PropTypes.arrayOf(PropTypes.string),
 };
 
 FeathersProvider.defaultProps = {
