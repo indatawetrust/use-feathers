@@ -329,24 +329,26 @@ export const FeathersProvider = ({
     },
   });
 
+  const value = {
+    checkAuth,
+    login,
+    register,
+    reAuth,
+    logout,
+    isLoggedIn,
+    userInfo,
+    mainState: state,
+    useFind,
+    useGet,
+    useCreate,
+    useUpdate,
+    usePatch,
+    useRemove,
+  };
+
   return (
     <FeathersContext.Provider
-      value={{
-        checkAuth,
-        login,
-        register,
-        reAuth,
-        logout,
-        isLoggedIn,
-        userInfo,
-        mainState: state,
-        useFind,
-        useGet,
-        useCreate,
-        useUpdate,
-        usePatch,
-        useRemove,
-      }}
+      value={value}
     >
       {children}
     </FeathersContext.Provider>

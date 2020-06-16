@@ -5,11 +5,12 @@ import postcss from 'rollup-plugin-postcss';
 import filesize from 'rollup-plugin-filesize';
 import autoprefixer from 'autoprefixer';
 import localResolve from 'rollup-plugin-local-resolve';
+import typescript from 'rollup-plugin-typescript2';
 
 import pkg from './package.json';
 
-const INPUT_FILE_PATH = 'src/index.js';
-const OUTPUT_NAME = 'Example';
+const INPUT_FILE_PATH = 'src/index.tsx';
+const OUTPUT_NAME = 'useFeathers';
 
 const GLOBALS = {
   react: 'React',
@@ -31,6 +32,7 @@ const PLUGINS = [
     browser: true,
   }),
   commonjs(),
+  typescript({ useTsconfigDeclarationDir: true }),
   filesize(),
 ];
 

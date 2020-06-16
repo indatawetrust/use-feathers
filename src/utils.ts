@@ -6,7 +6,7 @@ const keys = (ks) => (Array.isArray(ks) ? ks : ks.split('.'));
 // returning the current value in each iteration.
 // if at any point the value for the current key does not exist,
 // return the default value
-export const deepGet = (o, kp, d) => keys(kp).reduce((o, k) => (o && o[k]) || d, o);
+export const deepGet = (o, kp, d?) => keys(kp).reduce((o, k) => (o && o[k]) || d, o);
 
 // traverse the set of keys right to left,
 // returning a new object containing both properties from the object
@@ -29,8 +29,8 @@ export const multiDeepSet = (stateParam, params = []) => {
   let state = stateParam;
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const param of params) {
-    state = deepSet(state, ...param);
+  for (const [path, value] of params) {
+    state = deepSet(state, path, value);
   }
 
   return state;
