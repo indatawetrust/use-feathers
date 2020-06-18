@@ -2,15 +2,18 @@ import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { useForm } from 'react-hook-form';
 import { useFeathers } from '@cond/use-feathers';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const Register = ({}) => {
   const { handleSubmit, register, errors, watch } = useForm();
   const { register: userRegister } = useFeathers();
+  const history = useHistory();
 
   const onSubmit = (values) => {
     userRegister(values)
-      .then(() => {})
+      .then(() => {
+        history.push('/login');
+      })
       .catch((error) => {});
   };
 
