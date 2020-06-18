@@ -268,21 +268,21 @@ export const FeathersProvider = ({
   });
   const usePatch = (service) => ({
     // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
-    patchAction: (id, query = {}) => {
+    state: deepGet(state, ['serviceState', service, serviceMethods.PATCH]),
+    patchAction: (id, data = {}, params = {}) => {
       dispatch({
         type: actionTypes.PENDING,
-        method: serviceMethods.REMOVE,
+        method: serviceMethods.PATCH,
         service,
       });
 
       feathersClient
         .service(service)
-        .remove(id, { query })
+        .patch(id, data, params)
         .then((result) => {
           dispatch({
             type: actionTypes.FULFILLED,
-            method: serviceMethods.REMOVE,
+            method: serviceMethods.PATCH,
             service,
             result,
           });
@@ -290,7 +290,7 @@ export const FeathersProvider = ({
         .catch((error) => {
           dispatch({
             type: actionTypes.REJECTED,
-            method: serviceMethods.REMOVE,
+            method: serviceMethods.PATCH,
             service,
             error,
           });
