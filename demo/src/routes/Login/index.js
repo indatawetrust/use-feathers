@@ -12,7 +12,7 @@ const Login = ({}) => {
   const onSubmit = (values) => {
     userLogin(values)
       .then(() => {
-        history.push('/register')
+        history.push('/')
       })
       .catch((error) => {
         
