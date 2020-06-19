@@ -12,6 +12,7 @@ branches:
     - master
 
 before_script:
+  - npm i
   - cd demo
   - npm run build
 
