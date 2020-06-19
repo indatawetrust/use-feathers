@@ -1,20 +1,24 @@
+sudo: required
+dist: trusty
+addons:
+  chrome: stable
+
 language: node_js
-cache:
-  directories:
-    - ~/.npm
+node_js:
+  - node
+
+branches:
+  only:
+    - master
+
+before_script:
+  - cd demo
+  - npm run build
+
+script:
+  - npm test
+
 notifications:
-  email: true
-install: npm install
-before_install:
-  - npm install -g npm@5
-  - npm install -g greenkeeper-lockfile@1
-jobs:
-  include:
-    - stage: test
-      script:
-        - npm run lint
-        - npm run test
-        - npm run build
-        - npm run is-build-es5
-      before_script: greenkeeper-lockfile-update
-      after_script: greenkeeper-lockfile-upload
+  email:
+    on_failure: always
+    on_success: change
