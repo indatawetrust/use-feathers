@@ -151,7 +151,7 @@ export const FeathersProvider = ({
   const useFind = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.FIND]),
-    resetFindState: resetState(service, serviceMethods.FIND),
+    resetFindState: () => resetState(service, serviceMethods.FIND),
     findAction: (query = {}) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -185,7 +185,7 @@ export const FeathersProvider = ({
   const useGet = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.GET]),
-    resetGetState: resetState(service, serviceMethods.GET),
+    resetGetState: () => resetState(service, serviceMethods.GET),
     getAction: (id: string) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -217,7 +217,7 @@ export const FeathersProvider = ({
   const useCreate = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.CREATE]),
-    resetCreateState: resetState(service, serviceMethods.CREATE),
+    resetCreateState: () => resetState(service, serviceMethods.CREATE),
     createAction: (data, params) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -249,7 +249,7 @@ export const FeathersProvider = ({
   const useUpdate = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.UPDATE]),
-    resetUpdateState: resetState(service, serviceMethods.UPDATE),
+    resetUpdateState: () => resetState(service, serviceMethods.UPDATE),
     updateAction: (id: string, params = {}, query = {}) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -281,7 +281,7 @@ export const FeathersProvider = ({
   const usePatch = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.PATCH]),
-    resetPatchState: resetState(service, serviceMethods.PATCH),
+    resetPatchState: () => resetState(service, serviceMethods.PATCH),
     patchAction: (id, data = {}, params = {}) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -313,7 +313,7 @@ export const FeathersProvider = ({
   const useRemove = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
-    resetRemoveState: resetState(service, serviceMethods.REMOVE),
+    resetRemoveState: () => resetState(service, serviceMethods.REMOVE),
     removeAction: (id, query = {}) => {
       dispatch({
         type: actionTypes.PENDING,
