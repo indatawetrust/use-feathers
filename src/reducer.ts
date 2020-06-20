@@ -28,6 +28,13 @@ const reducer = (state, action) => {
         [['serviceState', action.service, action.method, 'isLoaded'], true],
         [['serviceState', action.service, action.method, 'isPending'], false],
       ]);
+    case actionTypes.RESET:
+      return multiDeepSet(state, [
+        [['serviceState', action.service, action.method, 'error'], null],
+        [['serviceState', action.service, action.method, 'isLoaded'], false],
+        [['serviceState', action.service, action.method, 'isPending'], false],
+        [['serviceState', action.service, action.method, 'data'], null],
+      ]);
     case actionTypes.INITIAL_SERVICES:
       return {
         ...state,

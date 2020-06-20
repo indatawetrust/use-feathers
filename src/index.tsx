@@ -140,9 +140,18 @@ export const FeathersProvider = ({
    */
   const logout = () => feathersClient.logout().then(() => setIsLoggedIn(false));
 
-  const useFind = (service) => ({
+  const resetState = (service: string, method: string) => (
+    dispatch({
+      type: actionTypes.RESET,
+      method,
+      service,
+    })
+  );
+
+  const useFind = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.FIND]),
+    resetFindState: resetState(service, serviceMethods.FIND),
     findAction: (query = {}) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -173,10 +182,11 @@ export const FeathersProvider = ({
         });
     },
   });
-  const useGet = (service) => ({
+  const useGet = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.GET]),
-    getAction: (id) => {
+    resetGetState: resetState(service, serviceMethods.GET),
+    getAction: (id: string) => {
       dispatch({
         type: actionTypes.PENDING,
         method: serviceMethods.GET,
@@ -204,9 +214,10 @@ export const FeathersProvider = ({
         });
     },
   });
-  const useCreate = (service) => ({
+  const useCreate = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.CREATE]),
+    resetCreateState: resetState(service, serviceMethods.CREATE),
     createAction: (data, params) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -235,10 +246,11 @@ export const FeathersProvider = ({
         });
     },
   });
-  const useUpdate = (service) => ({
+  const useUpdate = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.UPDATE]),
-    updateAction: (id, params = {}, query = {}) => {
+    resetUpdateState: resetState(service, serviceMethods.UPDATE),
+    updateAction: (id: string, params = {}, query = {}) => {
       dispatch({
         type: actionTypes.PENDING,
         method: serviceMethods.UPDATE,
@@ -266,9 +278,10 @@ export const FeathersProvider = ({
         });
     },
   });
-  const usePatch = (service) => ({
+  const usePatch = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.PATCH]),
+    resetPatchState: resetState(service, serviceMethods.PATCH),
     patchAction: (id, data = {}, params = {}) => {
       dispatch({
         type: actionTypes.PENDING,
@@ -297,9 +310,10 @@ export const FeathersProvider = ({
         });
     },
   });
-  const useRemove = (service) => ({
+  const useRemove = (service: string) => ({
     // inject reducer state
     state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
+    resetRemoveState: resetState(service, serviceMethods.REMOVE),
     removeAction: (id, query = {}) => {
       dispatch({
         type: actionTypes.PENDING,

@@ -1,6 +1,6 @@
 {
   "name": "@cond/use-feathers",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "React bindings for FeathersJS",
   "main": "build/index.cjs.js",
   "module": "build/index.esm.js",
@@ -18,7 +18,7 @@
     "prepare": "npm run build",
     "semantic-release": "npx semantic-release",
     "start": "npm run build -- -w",
-    "test": "npx jest --coverage",
+    "test": "cypress run",
     "is-build-es5": "npx es-check es5 './build/**/*.!(esm).js'"
   },
   "repository": {
@@ -59,6 +59,7 @@
     "babel-preset-minify": "^0.5.1",
     "codecov": "^3.6.5",
     "css-loader": "^3.4.2",
+    "cypress": "^4.8.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "es-check": "^5.1.0",
