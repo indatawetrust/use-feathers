@@ -26,7 +26,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
 function App() {
   const [wait, setWait] = useState(true);
-  const { reAuth, logout, isLoggedIn } = useFeathers();
+  const { userInfo, reAuth, logout, isLoggedIn } = useFeathers();
   const history = useHistory();
 
   useEffect(() => {
@@ -58,6 +58,7 @@ function App() {
         <NavbarBrand href="/">app</NavbarBrand>
         {isLoggedIn && (
           <NavbarText>
+            <span className="mr-2">{userInfo?.email}</span>
             <Button onClick={logout} size="sm">
               logout
             </Button>

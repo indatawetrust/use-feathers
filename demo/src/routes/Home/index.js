@@ -113,7 +113,7 @@ const Home = () => {
             <ListGroupItem>no data</ListGroupItem>
           )}
           {findState.data.data.map((item) => (
-            <ListGroupItem>
+            <ListGroupItem key={item._id}>
               <div className="row">
                 {isEdit[item._id] ? (
                   <Input
