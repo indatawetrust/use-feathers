@@ -6,8 +6,8 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import reducer from './reducer';
-import { deepGet } from './utils';
 import { actionTypes, serviceMethods } from './constants';
+import mainHook from './hooks';
 
 const FeathersContext = React.createContext(null);
 
@@ -148,200 +148,16 @@ export const FeathersProvider = ({
     })
   );
 
-  const useFind = (service: string) => ({
-    // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.FIND]),
-    resetFindState: () => resetState(service, serviceMethods.FIND),
-    findAction: (query = {}) => {
-      dispatch({
-        type: actionTypes.PENDING,
-        method: serviceMethods.FIND,
-        service,
-      });
-
-      feathersClient
-        .service(service)
-        .find({
-          query,
-        })
-        .then((result) => {
-          dispatch({
-            type: actionTypes.FULFILLED,
-            method: serviceMethods.FIND,
-            service,
-            result,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: actionTypes.REJECTED,
-            method: serviceMethods.FIND,
-            service,
-            error,
-          });
-        });
-    },
-  });
-  const useGet = (service: string) => ({
-    // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.GET]),
-    resetGetState: () => resetState(service, serviceMethods.GET),
-    getAction: (id: string) => {
-      dispatch({
-        type: actionTypes.PENDING,
-        method: serviceMethods.GET,
-        service,
-      });
-
-      feathersClient
-        .service(service)
-        .get(id)
-        .then((result) => {
-          dispatch({
-            type: actionTypes.FULFILLED,
-            method: serviceMethods.GET,
-            service,
-            result,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: actionTypes.REJECTED,
-            method: serviceMethods.GET,
-            service,
-            error,
-          });
-        });
-    },
-  });
-  const useCreate = (service: string) => ({
-    // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.CREATE]),
-    resetCreateState: () => resetState(service, serviceMethods.CREATE),
-    createAction: (data, params) => {
-      dispatch({
-        type: actionTypes.PENDING,
-        method: serviceMethods.CREATE,
-        service,
-      });
-
-      feathersClient
-        .service(service)
-        .create(data, params)
-        .then((result) => {
-          dispatch({
-            type: actionTypes.FULFILLED,
-            method: serviceMethods.CREATE,
-            service,
-            result,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: actionTypes.REJECTED,
-            method: serviceMethods.CREATE,
-            service,
-            error,
-          });
-        });
-    },
-  });
-  const useUpdate = (service: string) => ({
-    // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.UPDATE]),
-    resetUpdateState: () => resetState(service, serviceMethods.UPDATE),
-    updateAction: (id: string, params = {}, query = {}) => {
-      dispatch({
-        type: actionTypes.PENDING,
-        method: serviceMethods.UPDATE,
-        service,
-      });
-
-      feathersClient
-        .service(service)
-        .update(id, params, { query })
-        .then((result) => {
-          dispatch({
-            type: actionTypes.FULFILLED,
-            method: serviceMethods.UPDATE,
-            service,
-            result,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: actionTypes.REJECTED,
-            method: serviceMethods.UPDATE,
-            service,
-            error,
-          });
-        });
-    },
-  });
-  const usePatch = (service: string) => ({
-    // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.PATCH]),
-    resetPatchState: () => resetState(service, serviceMethods.PATCH),
-    patchAction: (id, data = {}, params = {}) => {
-      dispatch({
-        type: actionTypes.PENDING,
-        method: serviceMethods.PATCH,
-        service,
-      });
-
-      feathersClient
-        .service(service)
-        .patch(id, data, params)
-        .then((result) => {
-          dispatch({
-            type: actionTypes.FULFILLED,
-            method: serviceMethods.PATCH,
-            service,
-            result,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: actionTypes.REJECTED,
-            method: serviceMethods.PATCH,
-            service,
-            error,
-          });
-        });
-    },
-  });
-  const useRemove = (service: string) => ({
-    // inject reducer state
-    state: deepGet(state, ['serviceState', service, serviceMethods.REMOVE]),
-    resetRemoveState: () => resetState(service, serviceMethods.REMOVE),
-    removeAction: (id, query = {}) => {
-      dispatch({
-        type: actionTypes.PENDING,
-        method: serviceMethods.REMOVE,
-        service,
-      });
-
-      feathersClient
-        .service(service)
-        .remove(id, { query })
-        .then((result) => {
-          dispatch({
-            type: actionTypes.FULFILLED,
-            method: serviceMethods.REMOVE,
-            service,
-            result,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: actionTypes.REJECTED,
-            method: serviceMethods.REMOVE,
-            service,
-            error,
-          });
-        });
-    },
-  });
+  const {
+    useFind,
+    useGet,
+    useCreate,
+    useUpdate,
+    usePatch,
+    useRemove,
+  } = mainHook({
+    dispatch, resetState, feathersClient, state
+  })
 
   const value = {
     checkAuth,
