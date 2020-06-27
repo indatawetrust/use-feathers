@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import reducer from './reducer';
-import { actionTypes, serviceMethods } from './constants';
+import { actionTypes, serviceMethods, serviceEvents } from './constants';
 import mainHook from './hooks';
 
 const FeathersContext = React.createContext(null);
@@ -19,10 +19,21 @@ export const FeathersProvider = ({
   children,
   client: feathersClient,
   initialServices = [],
+  realtime,
+  idFieldName,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer(idFieldName), initialState);
+
+  const useServiceEvents = (service: string, handler: Function) => {
+    feathersClient
+      .service(service)
+      .on('created', (data) => handler('created', data))
+      .on('updated', (data) => handler('updated', data))
+      .on('patched', (data) => handler('patched', data))
+      .on('removed', (data) => handler('removed', data));
+  };
 
   useEffect(() => {
     const initialServiceState = {};
@@ -74,6 +85,20 @@ export const FeathersProvider = ({
     // eslint-disable-next-line no-restricted-syntax
     for (const service of initialServices) {
       initialServiceState[service] = serviceState;
+
+      if (realtime) {
+        useServiceEvents(service, (event: string, data: string) => {
+          const EVENT = event.toUpperCase();
+  
+          if (serviceEvents[EVENT]) {
+            dispatch({
+              type: event.toUpperCase(),
+              data,
+              service,
+            });
+          }
+        });
+      }
     }
 
     dispatch({ type: actionTypes.INITIAL_SERVICES, initialServiceState });
@@ -157,7 +182,7 @@ export const FeathersProvider = ({
     useRemove,
   } = mainHook({
     dispatch, resetState, feathersClient, state
-  })
+  });
 
   const value = {
     checkAuth,
@@ -174,6 +199,7 @@ export const FeathersProvider = ({
     useUpdate,
     usePatch,
     useRemove,
+    useServiceEvents,
   };
 
   return (
@@ -188,9 +214,12 @@ export const FeathersProvider = ({
 FeathersProvider.propTypes = {
   children: PropTypes.element.isRequired,
   client: PropTypes.object.isRequired,
+  realtime: PropTypes.bool,
   initialServices: PropTypes.arrayOf(PropTypes.string),
 };
 
 FeathersProvider.defaultProps = {
   initialServices: [],
+  realtime: false,
+  idFieldName: '_id',
 };

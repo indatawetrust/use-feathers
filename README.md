@@ -41,6 +41,8 @@ export default feathersClient;
 
 **initialServices** services to be used in the application. state values are created.
 
+**realtime** it is off by default. In case you open it, the state is updated for the relevant service according to the service events. https://docs.feathersjs.com/api/events.html#service-events
+
 ```jsx
 import React from 'react'
 import ReactDOM from 'react-dom'

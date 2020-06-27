@@ -6,7 +6,8 @@ const keys = (ks) => (Array.isArray(ks) ? ks : ks.split('.'));
 // returning the current value in each iteration.
 // if at any point the value for the current key does not exist,
 // return the default value
-export const deepGet = (o, kp, d?) => keys(kp).reduce((o, k) => (o && o[k]) || d, o);
+export const deepGet = (o, kp, d?) =>
+  keys(kp).reduce((o, k) => (o && o[k]) || d, o);
 
 // traverse the set of keys right to left,
 // returning a new object containing both properties from the object
@@ -19,11 +20,12 @@ export const deepGet = (o, kp, d?) => keys(kp).reduce((o, k) => (o && o[k]) || d
 // 1. c = Object.assign({}, {c: 1}, { c: 2 })
 // 2. b = Object.assign({}, { b: { c: 1 } }, { b: c })
 // 3. returned = Object.assign({}, { a: { b: { c: 1 } } }, { a: b })
-export const deepSet = (o, kp, v) => keys(kp).reduceRight(
-  // eslint-disable-next-line no-shadow
-  (v, k, i, ks) => ({ ...deepGet(o, ks.slice(0, i)), [k]: v }),
-  v,
-);
+export const deepSet = (o, kp, v) =>
+  keys(kp).reduceRight(
+    // eslint-disable-next-line no-shadow
+    (v, k, i, ks) => ({ ...deepGet(o, ks.slice(0, i)), [k]: v }),
+    v
+  );
 
 export const multiDeepSet = (stateParam, params = []) => {
   let state = stateParam;

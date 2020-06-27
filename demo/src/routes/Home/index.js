@@ -28,10 +28,6 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (createState.isLoaded || removeState.isLoaded || patchState.isLoaded) {
-      findAction();
-    }
-
     if (createState.isLoaded) {
       setTodoText('');
     }
@@ -104,8 +100,8 @@ const Home = () => {
       </InputGroup>
       <div>
         {findState.isPending && (
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
           </div>
         )}
         <ListGroup>

@@ -4,6 +4,10 @@ export const actionTypes = {
   REJECTED: 'REJECTED',
   RESET: 'RESET',
   INITIAL_SERVICES: 'INITIAL_SERVICES',
+  UPDATED: 'UPDATED',
+  REMOVED: 'REMOVED',
+  PATCHED: 'PATCHED',
+  CREATED: 'CREATED',
 };
 
 export const serviceMethods = {
@@ -13,4 +17,11 @@ export const serviceMethods = {
   REMOVE: 'REMOVE',
   PATCH: 'PATCH',
   CREATE: 'CREATE',
+};
+
+export const serviceEvents = {
+  UPDATED: 'UPDATED',
+  REMOVED: 'REMOVED',
+  PATCHED: 'PATCHED',
+  CREATED: 'CREATED',
 };

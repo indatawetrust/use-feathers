@@ -11,7 +11,11 @@ import { BrowserRouter as Router } from 'react-router-dom';
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <FeathersProvider client={feathersClient} initialServices={['todo']}>
+      <FeathersProvider
+        client={feathersClient}
+        initialServices={['todo']}
+        realtime
+      >
         <div className="container">
           <App />
         </div>

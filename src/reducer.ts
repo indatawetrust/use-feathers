@@ -1,7 +1,7 @@
-import { multiDeepSet } from './utils';
-import { actionTypes } from './constants';
+import { multiDeepSet, deepGet } from './utils';
+import { actionTypes, serviceMethods } from './constants';
 
-const reducer = (state, action) => {
+const reducer = (idFieldName: string) => (state, action) => {
   switch (action.type) {
     case actionTypes.PENDING:
       return multiDeepSet(state, [
@@ -40,6 +40,90 @@ const reducer = (state, action) => {
         ...state,
         serviceState: action.initialServiceState,
       };
+    case actionTypes.CREATED:
+      return multiDeepSet(state, [
+        [
+          ['serviceState', action.service, serviceMethods.FIND, 'data', 'data'],
+          [
+            ...deepGet(state, [
+              'serviceState',
+              action.service,
+              serviceMethods.FIND,
+              'data',
+              'data',
+            ]),
+            action.data,
+          ],
+        ],
+        [
+          [
+            'serviceState',
+            action.service,
+            serviceMethods.FIND,
+            'data',
+            'total',
+          ],
+          (deepGet(state, [
+            'serviceState',
+            action.service,
+            serviceMethods.FIND,
+            'data',
+            'total',
+          ]) || 0) + 1,
+        ],
+      ]);
+    case actionTypes.REMOVED:
+      return multiDeepSet(state, [
+        [
+          ['serviceState', action.service, serviceMethods.FIND, 'data', 'data'],
+          [
+            ...deepGet(state, [
+              'serviceState',
+              action.service,
+              serviceMethods.FIND,
+              'data',
+              'data',
+            ]).filter((item: object) => item[idFieldName] !== action.data[idFieldName]),
+          ],
+        ],
+        [
+          [
+            'serviceState',
+            action.service,
+            serviceMethods.FIND,
+            'data',
+            'total',
+          ],
+          deepGet(state, [
+            'serviceState',
+            action.service,
+            serviceMethods.FIND,
+            'data',
+            'total',
+          ]) - 1,
+        ],
+      ]);
+    case actionTypes.UPDATED:
+    case actionTypes.PATCHED:
+      return multiDeepSet(state, [
+        [
+          ['serviceState', action.service, serviceMethods.FIND, 'data', 'data'],
+          [
+            ...deepGet(state, [
+              'serviceState',
+              action.service,
+              serviceMethods.FIND,
+              'data',
+              'data',
+            ]).map((item: object) => {
+              if (item[idFieldName] === action.data[idFieldName]) {
+                return action.data;
+              }
+              return item;
+            }),
+          ],
+        ],
+      ]);
     default:
       throw new Error();
   }
