@@ -33,7 +33,19 @@ const reducer = (idFieldName: string) => (state, action) => {
         [['serviceState', action.service, action.method, 'error'], null],
         [['serviceState', action.service, action.method, 'isLoaded'], false],
         [['serviceState', action.service, action.method, 'isPending'], false],
-        [['serviceState', action.service, action.method, 'data'], null],
+        [
+          ['serviceState', action.service, action.method, 'data'], 
+          action.method === 'FIND' 
+          ? 
+            {
+              total: 0,
+              limit: 10,
+              skip: 0,
+              data: [],
+            } 
+          : 
+            null
+        ],
       ]);
     case actionTypes.INITIAL_SERVICES:
       return {
