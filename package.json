@@ -74,7 +74,7 @@
     "jest": "^25.1.0",
     "jest-transform-css": "^2.0.0",
     "marked": "^4.0.10",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "postcss": "~8.4.5",
     "react-test-renderer": "^16.13.0",
     "rollup": "^2.0.0",
